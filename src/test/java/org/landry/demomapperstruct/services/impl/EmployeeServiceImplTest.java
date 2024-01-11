@@ -310,20 +310,13 @@ class EmployeeServiceImplTest {
         String name = "landry";
         String email = "landry@gmail.com";
         String roleName = "developer";
-        Role role = Role.builder().name(roleName).build();
-        Employee employeeWithOutRole = Employee.builder()
-                .name(name)
-                .email(email)
-                .roleList(Collections.emptyList())
-                .build();
 
-        Employee employeeWithRole = Employee.builder()
-                .name(name)
-                .email(email)
-                .roleList(Collections.singletonList(role))
-                .build();
+        Employee employeeWithOutRole = employeeWithOutRole(name,email);
+
+        Employee employeeWithRole = employeeWithRole(name,email);
+
         Mockito.when(employeeRepository.findEmployeeByEmail(email)).thenReturn(Optional.of(employeeWithOutRole));
-        Mockito.when(roleRepository.findRoleByName(roleName)).thenReturn(Optional.of(role));
+        Mockito.when(roleRepository.findRoleByName(roleName)).thenReturn(Optional.of(role()));
         Mockito.when(employeeRepository.save(employeeWithRole)).thenReturn(employeeWithRole);
 
         //when
@@ -338,6 +331,8 @@ class EmployeeServiceImplTest {
                 throw new RuntimeException(e);
             }
         };
+
+
 
 
         //then
@@ -378,6 +373,26 @@ class EmployeeServiceImplTest {
                         .build());
 
     }
+    private Employee employeeWithOutRole(String name, String email){
+        return Employee.builder()
+                .name(name)
+                .email(email)
+                .roleList(Collections.emptyList())
+                .build();
+    }
+    private Employee employeeWithRole(String name, String email){
+
+        return Employee.builder()
+                .name(name)
+                .email(email)
+                .roleList(Collections.singletonList(role()))
+                .build();
+    }
+    private Role role(){
+        return Role.builder().name("Developer").build();
+    }
+
+
 
     private Employee getEmployeeUpdated() {
         return Employee.builder()
@@ -430,4 +445,5 @@ class EmployeeServiceImplTest {
                 .roleDtoList(Collections.singletonList(RoleDto.builder().name("Chief Project").build()))
                 .build();
     }
+
 }
